@@ -573,6 +573,7 @@ MonoBehaviour:
   amountToSpawn: 20000
   rangeToSpawn: 50
   spawns: []
+  chosen: 2
 --- !u!1 &1246967989
 GameObject:
   m_ObjectHideFlags: 0
