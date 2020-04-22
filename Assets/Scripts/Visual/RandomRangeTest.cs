@@ -21,6 +21,8 @@ public class RandomRangeTest : MonoBehaviour
         LCG,
         URANIUM,
         MOUSE,
+        MOUSEANDTIME,
+
     }
 
     public method chosen;
@@ -30,17 +32,31 @@ public class RandomRangeTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (chosen == method.LCG)
+
+        switch (chosen)
         {
-            LCG();
-        }
-        else if (chosen == method.URANIUM)
-        {
-            uranium();
-        }
-        else if (chosen == method.MOUSE)
-        {
-            mouse();
+            case method.LCG:
+                {
+                    LCG();
+                    break;
+                }
+            case method.URANIUM:
+                {
+                    uranium();
+                    break;
+                }
+            case method.MOUSE:
+                {
+                    mouse();
+                    break;
+                }
+            case method.MOUSEANDTIME:
+                {
+                    mouseTime();
+                    break;
+                }
+            default:
+                break;
         }
 
     }
@@ -102,7 +118,17 @@ public class RandomRangeTest : MonoBehaviour
     {
         StartCoroutine(mousewig());
         StartCoroutine(SpawnObjects());
+    }
 
+    private void mouseTime()
+    {
+        StartCoroutine(mousewigTime());
+        StartCoroutine(SpawnObjects());
+    }
+
+    float nfmod(float a, float b)
+    {
+        return a - b * Mathf.Floor(a / b);
     }
 
     void Number(float tmp)
@@ -135,36 +161,46 @@ public class RandomRangeTest : MonoBehaviour
             float y = Input.GetAxis("Mouse Y");
             float tmp = 0.0f;
 
+           
 
             if (x != 0.0f && y != 0.0f)
             {
-                tmp = x * y;
-                tmp = tmp % 10.0f;
-                count++;
-                Number(tmp);
+                tmp = x + y;
+                if (tmp > 10.0f)
+                {
+                    tmp = nfmod(tmp, 10.0f);
+                    count++;
+                    Number(tmp);
+                }
 
             }
             else if (x != 0.0f)
             {
                 tmp = x;
-                tmp = tmp % 10.0f;
-                count++;
-                Number(tmp);
+                if (tmp > 10.0f)
+                {
+                    tmp = nfmod(tmp, 10.0f);
+                    count++;
+                    Number(tmp);
+                }
 
             }
             else if (y != 0.0f)
             {
                 tmp = y;
-                tmp = tmp % 10.0f;
-                count++;
-                Number(tmp);
+                if (tmp > 10.0f)
+                {
+                    tmp = nfmod(tmp, 10.0f);
+                    count++;
+                    Number(tmp);
+                }
             }
 
 
             if (count == 3)
             {
                 count = 0;
-                Instantiate(testObj, new Vector3(v1, v2, v3), Quaternion.identity);
+                Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
@@ -177,6 +213,73 @@ public class RandomRangeTest : MonoBehaviour
         yield return null;
     }
 
+    public IEnumerator mousewigTime()
+    {
+        bool play = true;
+
+        int count = 0;
+
+
+        while (play == true)
+        {
+            float x = Input.GetAxis("Mouse X");
+            float y = Input.GetAxis("Mouse Y");
+            float tmp = 0.0f;
+
+
+
+            if (x != 0.0f && y != 0.0f)
+            {
+                tmp = x + y;
+                if (tmp > 10.0f)
+                {
+                    tmp *= System.DateTime.Now.Millisecond;
+                    tmp = nfmod(tmp, 10.0f);
+                    count++;
+                    Number(tmp);
+                }
+
+            }
+            else if (x != 0.0f)
+            {
+                tmp = x;
+                if (tmp > 10.0f)
+                {
+                    tmp *= System.DateTime.Now.Millisecond;
+                    tmp = nfmod(tmp, 10.0f);
+                    count++;
+                    Number(tmp);
+                }
+
+            }
+            else if (y != 0.0f)
+            {
+                tmp = y;
+                if (tmp > 10.0f)
+                {
+                    tmp *= System.DateTime.Now.Millisecond;
+                    tmp = nfmod(tmp, 10.0f);
+                    count++;
+                    Number(tmp);
+                }
+            }
+
+
+            if (count == 3)
+            {
+                count = 0;
+                Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
+                v1 = 0.0f;
+                v2 = 0.0f;
+                v3 = 0.0f;
+            }
+
+
+            yield return null;
+        }
+
+        yield return null;
+    }
 
 
 
