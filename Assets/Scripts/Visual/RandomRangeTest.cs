@@ -294,6 +294,8 @@ public class RandomRangeTest : MonoBehaviour
 
 
 
+
+
     //IEnumerator SpawnObjects()
     //{
     //    for (int i = 0; i < spawns.Count; i++)
