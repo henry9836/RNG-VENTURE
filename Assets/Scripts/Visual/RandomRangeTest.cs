@@ -80,14 +80,12 @@ public class RandomRangeTest : MonoBehaviour
         for (int i = 0; i < amountToSpawn; i++)
         {
             seed = (a * seed * c) % m;
-            Debug.Log(seed);
 
             v1 = seed / m;
             v1 *= 100;
             v1 -= 50;
 
             seed = (a * seed * c) % m;
-            Debug.Log(seed);
 
             v2 = seed / m;
             v2 *= 100;
@@ -95,7 +93,6 @@ public class RandomRangeTest : MonoBehaviour
 
 
             seed = (a * seed * c) % m;
-            Debug.Log(seed);
 
             v3 = seed / m;
             v3 *= 100;
@@ -105,7 +102,7 @@ public class RandomRangeTest : MonoBehaviour
         }
 
 
-        StartCoroutine(SpawnObjects());
+       // StartCoroutine(SpawnObjects());
 
     }
 
@@ -117,13 +114,13 @@ public class RandomRangeTest : MonoBehaviour
     private void mouse()
     {
         StartCoroutine(mousewig());
-        StartCoroutine(SpawnObjects());
+        //StartCoroutine(SpawnObjects());
     }
 
     private void mouseTime()
     {
         StartCoroutine(mousewigTime());
-        StartCoroutine(SpawnObjects());
+        //StartCoroutine(SpawnObjects());
     }
 
     float nfmod(float a, float b)
@@ -146,7 +143,7 @@ public class RandomRangeTest : MonoBehaviour
             v3 = tmp;
         }
     }
- 
+
 
     public IEnumerator mousewig()
     {
@@ -161,7 +158,7 @@ public class RandomRangeTest : MonoBehaviour
             float y = Input.GetAxis("Mouse Y");
             float tmp = 0.0f;
 
-           
+
 
             if (x != 0.0f && y != 0.0f)
             {
@@ -200,7 +197,8 @@ public class RandomRangeTest : MonoBehaviour
             if (count == 3)
             {
                 count = 0;
-                Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
+                //Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
+                spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
@@ -290,19 +288,32 @@ public class RandomRangeTest : MonoBehaviour
             spawns.Add(new Vector3(Random.Range(-rangeToSpawn, rangeToSpawn), Random.Range(-rangeToSpawn, rangeToSpawn), Random.Range(-rangeToSpawn, rangeToSpawn)));
             yield return null;
         }
-        StartCoroutine(SpawnObjects());
+        //StartCoroutine(SpawnObjects());
         yield return null;
     }
 
-    IEnumerator SpawnObjects()
+
+
+    //IEnumerator SpawnObjects()
+    //{
+    //    for (int i = 0; i < spawns.Count; i++)
+    //    {
+    //        Instantiate(testObj, spawns[i], Quaternion.identity);
+
+    //        yield return null;
+    //    }
+
+    //    yield return null;
+    //}
+
+
+    void OnDrawGizmos()
     {
         for (int i = 0; i < spawns.Count; i++)
         {
-            Instantiate(testObj, spawns[i], Quaternion.identity);
-
-            yield return null;
+            Gizmos.color = Color.white;
+            Gizmos.DrawCube(spawns[i], new Vector3(1.0f, 1.0f, 1.0f));
         }
-        yield return null;
-    }
 
+    }
 }
