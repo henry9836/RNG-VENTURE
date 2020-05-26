@@ -9,10 +9,10 @@ public class UraniumSimulator : MonoBehaviour
     public float lastSeenDecayDelay = 0.0f;
     [Range(1,31)]
     public int binaryLength = 31;
-    [Range(0.0f, 3.0f)]
+    [Range(0.01f, 3.0f)]
     public float timeBeforeDecay = 0.7f;
-    public int currentSeedingValue = 1;
 
+    private int currentSeedingValue = 1;
     private string seedingString = "";
     private bool decayFlag = false;
     private float decayTimer = 0.0f;
@@ -41,6 +41,10 @@ public class UraniumSimulator : MonoBehaviour
                 if (seedingString.Length == binaryLength)
                 {
                     currentSeedingValue = Convert.ToInt32(seedingString, 2);
+                    if (currentSeedingValue < 0.0f)
+                    {
+                        currentSeedingValue *= -1;
+                    }
                     seedingString = "";
                 }
                 decayTimer = 0.0f;

@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using UnityEngine;
 
 public class RandomRangeTest : MonoBehaviour
 {
 
     public GameObject testObj;
+    public UraniumSimulator uraniumSim;
     public int amountToSpawn = 10000;
     public float rangeToSpawn = 50.0f;
 
@@ -64,51 +66,44 @@ public class RandomRangeTest : MonoBehaviour
 
     private void LCG()
     {
-        //Debug.Log($"B: {Random.state}");
-        //Random.InitState(1234);
         double seed = 1234;
         double a = 22695477;
         double c = 1;
-        //double m = Mathf.Pow(2, 32);
         double m = 100000;
-        double bigboi = 0.0;
 
         double v1 = 0.0;
         double v2 = 0.0;
         double v3 = 0.0;
-        //Debug.Log($"A: {Random.seed}");ssed
+
         for (int i = 0; i < amountToSpawn; i++)
         {
             seed = (a * seed * c) % m;
 
             v1 = seed / m;
-            v1 *= 100;
-            v1 -= 50;
+            v1 *= rangeToSpawn;
+            v1 -= rangeToSpawn/2;
 
             seed = (a * seed * c) % m;
 
             v2 = seed / m;
-            v2 *= 100;
-            v2 -= 50;
+            v2 *= rangeToSpawn;
+            v2 -= rangeToSpawn/2;
 
 
             seed = (a * seed * c) % m;
 
             v3 = seed / m;
-            v3 *= 100;
-            v3 -= 50;
+            v3 *= rangeToSpawn;
+            v3 -= rangeToSpawn/2;
 
             spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
         }
-
-
-       // StartCoroutine(SpawnObjects());
-
     }
+
 
     private void uranium()
     {
-        //TODO add code
+        StartCoroutine(readDatUranium());
     }
 
     private void mouse()
@@ -147,12 +142,10 @@ public class RandomRangeTest : MonoBehaviour
 
     public IEnumerator mousewig()
     {
-        bool play = true;
 
         int count = 0;
 
-
-        while (play == true)
+        while (true)
         {
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
@@ -213,12 +206,10 @@ public class RandomRangeTest : MonoBehaviour
 
     public IEnumerator mousewigTime()
     {
-        bool play = true;
 
         int count = 0;
 
-
-        while (play == true)
+        while (true)
         {
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
@@ -265,8 +256,9 @@ public class RandomRangeTest : MonoBehaviour
 
             if (count == 3)
             {
-                count = 0;
-                Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
+                count = 0; 
+                spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
+                //Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
@@ -292,7 +284,65 @@ public class RandomRangeTest : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator readDatUranium()
+    {
+        float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
+        float timer = 0.0f;
 
+        while (true)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= timeToRando && uraniumSim.readUranium() != 1)
+            {
+
+                //Get Uranium Value With Other Values
+                double seed = uraniumSim.readUranium() * System.DateTime.Now.Millisecond;
+
+                if (seed < 0.0)
+                {
+                    seed *= -1.0;
+                }
+
+                //LCG
+                double a = 22695477;
+                double c = 1;
+                double m = 100000;
+
+                double v1 = 0.0;
+                double v2 = 0.0;
+                double v3 = 0.0;
+
+                seed = (a * seed * c) % m;
+
+                v1 = seed / m;
+                v1 *= rangeToSpawn;
+                v1 -= rangeToSpawn/2;
+
+                seed = (a * seed * c) % m;
+
+                v2 = seed / m;
+                v2 *= rangeToSpawn;
+                v2 -= rangeToSpawn/2;
+
+
+                seed = (a * seed * c) % m;
+
+                v3 = seed / m;
+                v3 *= rangeToSpawn;
+                v3 -= rangeToSpawn/2;
+
+                //spawns.Add(new Vector3(Mathf.Abs((float)v1), Mathf.Abs((float)v2), Mathf.Abs((float)v3)));
+                spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
+
+                timer = 0.0f;
+            }
+
+            yield return null;
+        }
+
+        yield return null;
+    }
 
     //IEnumerator SpawnObjects()
     //{
