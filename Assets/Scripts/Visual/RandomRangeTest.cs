@@ -5,12 +5,9 @@ using UnityEngine;
 
 public class RandomRangeTest : MonoBehaviour
 {
-
     public GameObject testObj;
     public UraniumSimulator uraniumSim;
-    public int amountToSpawn = 10000;
     public float rangeToSpawn = 50.0f;
-
 
     public List<Vector3> spawns = new List<Vector3>();
 
@@ -18,23 +15,23 @@ public class RandomRangeTest : MonoBehaviour
     private float v2 = 0.0f;
     private float v3 = 0.0f;
 
+    public int count = 0;
+    public float timetaken = 0.0f;
+
     public enum method
     {
         LCG,
         URANIUM,
         MOUSE,
         MOUSEANDTIME,
-
+        MERSENNETWISTER,
     }
 
     public method chosen;
 
-
-
-    // Start is called before the first frame update
+    #region init
     void Start()
     {
-
         switch (chosen)
         {
             case method.LCG:
@@ -57,73 +54,44 @@ public class RandomRangeTest : MonoBehaviour
                     mouseTime();
                     break;
                 }
+            case method.MERSENNETWISTER:
+                {
+                    MersenneTwistercall();
+                    break;
+                }
             default:
                 break;
         }
-
     }
-
 
     private void LCG()
     {
-        double seed = 1234;
-        double a = 22695477;
-        double c = 1;
-        double m = 100000;
-
-        double v1 = 0.0;
-        double v2 = 0.0;
-        double v3 = 0.0;
-
-        for (int i = 0; i < amountToSpawn; i++)
-        {
-            seed = (a * seed * c) % m;
-
-            v1 = seed / m;
-            v1 *= rangeToSpawn;
-            v1 -= rangeToSpawn/2;
-
-            seed = (a * seed * c) % m;
-
-            v2 = seed / m;
-            v2 *= rangeToSpawn;
-            v2 -= rangeToSpawn/2;
-
-
-            seed = (a * seed * c) % m;
-
-            v3 = seed / m;
-            v3 *= rangeToSpawn;
-            v3 -= rangeToSpawn/2;
-
-            spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
-        }
+        StartCoroutine(LCGtimer());
     }
-
-
     private void uranium()
     {
         StartCoroutine(readDatUranium());
     }
-
     private void mouse()
     {
         StartCoroutine(mousewig());
-        //StartCoroutine(SpawnObjects());
     }
-
     private void mouseTime()
     {
         StartCoroutine(mousewigTime());
-        //StartCoroutine(SpawnObjects());
+    }
+    private void MersenneTwistercall()
+    {
+        StartCoroutine(twist());
     }
 
-    float nfmod(float a, float b)
+    #endregion
+
+    public float nfmod(float a, float b)
     {
         return a - b * Mathf.Floor(a / b);
     }
-
-    void Number(float tmp)
+    public void Number(float tmp)
     {
         if (v1 == 0.0f)
         {
@@ -142,7 +110,6 @@ public class RandomRangeTest : MonoBehaviour
 
     public IEnumerator mousewig()
     {
-
         int count = 0;
 
         while (true)
@@ -150,8 +117,6 @@ public class RandomRangeTest : MonoBehaviour
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
             float tmp = 0.0f;
-
-
 
             if (x != 0.0f && y != 0.0f)
             {
@@ -190,7 +155,6 @@ public class RandomRangeTest : MonoBehaviour
             if (count == 3)
             {
                 count = 0;
-                //Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
                 spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
                 v1 = 0.0f;
                 v2 = 0.0f;
@@ -201,12 +165,10 @@ public class RandomRangeTest : MonoBehaviour
             yield return null;
         }
 
-        yield return null;
     }
 
     public IEnumerator mousewigTime()
     {
-
         int count = 0;
 
         while (true)
@@ -214,8 +176,6 @@ public class RandomRangeTest : MonoBehaviour
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
             float tmp = 0.0f;
-
-
 
             if (x != 0.0f && y != 0.0f)
             {
@@ -258,44 +218,27 @@ public class RandomRangeTest : MonoBehaviour
             {
                 count = 0; 
                 spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
-                //Instantiate(testObj, new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)), Quaternion.identity);
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
             }
 
-
             yield return null;
         }
-
-        yield return null;
     }
 
-
-
-    IEnumerator GenerateRandomVectors()
-    {
-        for (int i = 0; i < amountToSpawn; i++)
-        {
-            spawns.Add(new Vector3(Random.Range(-rangeToSpawn, rangeToSpawn), Random.Range(-rangeToSpawn, rangeToSpawn), Random.Range(-rangeToSpawn, rangeToSpawn)));
-            yield return null;
-        }
-        //StartCoroutine(SpawnObjects());
-        yield return null;
-    }
-
-    IEnumerator readDatUranium()
+    public IEnumerator readDatUranium()
     {
         float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
         float timer = 0.0f;
 
         while (true)
         {
+            timetaken += Time.deltaTime;
             timer += Time.deltaTime;
 
             if (timer >= timeToRando && uraniumSim.readUranium() != 1)
             {
-
                 //Get Uranium Value With Other Values
                 double seed = uraniumSim.readUranium() * System.DateTime.Now.Millisecond;
 
@@ -332,8 +275,9 @@ public class RandomRangeTest : MonoBehaviour
                 v3 *= rangeToSpawn;
                 v3 -= rangeToSpawn/2;
 
-                //spawns.Add(new Vector3(Mathf.Abs((float)v1), Mathf.Abs((float)v2), Mathf.Abs((float)v3)));
                 spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
+                count++;
+
 
                 timer = 0.0f;
             }
@@ -341,21 +285,73 @@ public class RandomRangeTest : MonoBehaviour
             yield return null;
         }
 
-        yield return null;
     }
 
-    //IEnumerator SpawnObjects()
-    //{
-    //    for (int i = 0; i < spawns.Count; i++)
-    //    {
-    //        Instantiate(testObj, spawns[i], Quaternion.identity);
+    public IEnumerator twist()
+    {
+        MersenneTwister MT = this.GetComponent<MersenneTwister>();
 
-    //        yield return null;
-    //    }
 
-    //    yield return null;
-    //}
+        while (true)
+        {
+            timetaken += Time.deltaTime;
 
+            double v1 = MT.genrand_res53();
+            v1 *= rangeToSpawn;
+            v1 -= rangeToSpawn / 2;
+            double v2 = MT.genrand_res53();
+            v2 *= rangeToSpawn;
+            v2 -= rangeToSpawn / 2;
+            double v3 = MT.genrand_res53();
+            v3 *= rangeToSpawn;
+            v3 -= rangeToSpawn / 2;
+            spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
+            count++;
+
+            yield return null;
+        }
+    }
+
+    public IEnumerator LCGtimer()
+    {
+        double seed = 1234;
+        double a = 22695477;
+        double c = 1;
+        double m = 100000;
+
+        double v1 = 0.0;
+        double v2 = 0.0;
+        double v3 = 0.0;
+
+        while (true)
+        {
+            timetaken += Time.deltaTime;
+
+            seed = (a * seed * c) % m;
+
+            v1 = seed / m;
+            v1 *= rangeToSpawn;
+            v1 -= rangeToSpawn / 2;
+
+            seed = (a * seed * c) % m;
+
+            v2 = seed / m;
+            v2 *= rangeToSpawn;
+            v2 -= rangeToSpawn / 2;
+
+
+            seed = (a * seed * c) % m;
+
+            v3 = seed / m;
+            v3 *= rangeToSpawn;
+            v3 -= rangeToSpawn / 2;
+
+            spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
+            count++;
+
+            yield return null;
+        }
+    } 
 
     void OnDrawGizmos()
     {
@@ -364,6 +360,5 @@ public class RandomRangeTest : MonoBehaviour
             Gizmos.color = Color.white;
             Gizmos.DrawCube(spawns[i], new Vector3(1.0f, 1.0f, 1.0f));
         }
-
     }
 }
