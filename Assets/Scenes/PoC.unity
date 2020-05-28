@@ -525,7 +525,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 2
+  antialiasing: 0
   SMAAQuality: 2
   dithering: 0
   stopNaNs: 0
@@ -540,7 +540,7 @@ MonoBehaviour:
     m_Anamorphism: 0
   flipYMode: 0
   fullscreenPassthrough: 0
-  allowDynamicResolution: 1
+  allowDynamicResolution: 0
   customRenderingSettings: 0
   invertFaceCulling: 0
   probeLayerMask:
@@ -609,7 +609,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 0
-  m_AllowDynamicResolution: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -642,7 +642,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testObj: {fileID: 7923456392430905050, guid: b3441fda374f11f439d642ac4ab0ee82, type: 3}
   uraniumSim: {fileID: 1541717927}
-  amountToSpawn: 20000
   rangeToSpawn: 50
   spawns: []
   count: 0
