@@ -9,7 +9,7 @@ public class UraniumSimulator : MonoBehaviour
     public float lastSeenDecayDelay = 0.0f;
     [Range(1,31)]
     public int binaryLength = 31;
-    [Range(0.01f, 3.0f)]
+    [Range(0.00001f, 1.0f)]
     public float timeBeforeDecay = 0.7f;
 
     private int currentSeedingValue = 1;
