@@ -25,6 +25,7 @@ public class RandomRangeTest : MonoBehaviour
         MOUSE,
         MOUSEANDTIME,
         MERSENNETWISTER,
+        MERSENNETWISTERANDURANIUM,
     }
 
     public method chosen;
@@ -59,11 +60,20 @@ public class RandomRangeTest : MonoBehaviour
                     MersenneTwistercall();
                     break;
                 }
+            case method.MERSENNETWISTERANDURANIUM:
+                {
+                    twisteranduranium();
+                    break;
+                }
             default:
                 break;
         }
     }
 
+    private void twisteranduranium()
+    {
+        StartCoroutine(uraniumandtwist());
+    }
     private void LCG()
     {
         StartCoroutine(LCGtimer());
@@ -351,14 +361,49 @@ public class RandomRangeTest : MonoBehaviour
 
             yield return null;
         }
-    } 
+    }
+
+    public IEnumerator uraniumandtwist()
+    {
+        float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
+        float timer = 0.0f;
+        MersenneTwister MT = this.GetComponent<MersenneTwister>();
+
+
+        while (true)
+        {
+            timetaken += Time.deltaTime;
+            timer += Time.deltaTime;
+
+            if ((timer >= timeToRando) && (uraniumSim.readUranium() != 1))
+            {
+                float seed = (float)uraniumSim.readUranium() * (float)System.DateTime.Now.Millisecond;
+                MT.reseed(Mathf.Abs(seed));
+                timer = 0.0f;
+
+                double v1 = MT.genrand_res53();
+                v1 *= rangeToSpawn;
+                v1 -= rangeToSpawn / 2;
+                double v2 = MT.genrand_res53();
+                v2 *= rangeToSpawn;
+                v2 -= rangeToSpawn / 2;
+                double v3 = MT.genrand_res53();
+                v3 *= rangeToSpawn;
+                v3 -= rangeToSpawn / 2;
+                spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
+                count++;
+            }
+
+            yield return null;
+        }
+    }
 
     void OnDrawGizmos()
     {
         for (int i = 0; i < spawns.Count; i++)
         {
             Gizmos.color = Color.white;
-            Gizmos.DrawCube(spawns[i], new Vector3(1.0f, 1.0f, 1.0f));
+            Gizmos.DrawCube(spawns[i], new Vector3(0.5f, 0.5f, 0.5f));
         }
     }
 }
