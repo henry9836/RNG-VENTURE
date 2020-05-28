@@ -5,31 +5,41 @@ using UnityEngine;
 
 public class MersenneTwister : MonoBehaviour
 {
-	private const Int16 N = 624;
-	private const Int16 M = 397;
-	private const UInt32 MATRIX_A = (UInt32)0x9908b0df;   /* constant vector a */
-	private const UInt32 UPPER_MASK = (UInt32)0x80000000; /* most significant w-r bits */
-	private const UInt32 LOWER_MASK = (UInt32)0x7fffffff; /* least significant r bits */
-	private UInt32[] mt = new UInt32[N]; /* the array for the state vector  */
-	private UInt16 mti = N + 1; /* mti==N+1 means mt[N] is not initialized */
-	private UInt32[] mag01 = new UInt32[] { 0, MATRIX_A };
+	private const int N = 624;
+	private const int M = 397;
+	private const UInt32 UPPER_MASK = (UInt32)2147483648; /* most significant w-r bits */
+	private const UInt32 LOWER_MASK = (UInt32)2147483647; /* least significant r bits */
+
+	private UInt32[] mt; /* the array for the state vector  */
+	private UInt16 mti; /* mti==N+1 means mt[N] is not initialized */
+	private UInt32[] mag01; /* matrix a constant vector a */
 
 	public MersenneTwister()
 	{
-		UInt32[] seed_key = new UInt32[6];
-		Byte[] rnseed = new Byte[8];
+		reseed(-9999.0f);
+	}
 
-		seed_key[0] = (UInt32)System.DateTime.Now.Millisecond;
-		seed_key[1] = (UInt32)System.DateTime.Now.Second;
-		seed_key[2] = (UInt32)System.DateTime.Now.DayOfYear;
-		seed_key[3] = (UInt32)System.DateTime.Now.Year;
-		seed_key[4] = ((UInt32)rnseed[0] << 24) | ((UInt32)rnseed[1] << 16) | ((UInt32)rnseed[2] << 8) | ((UInt32)rnseed[3]);
-		seed_key[5] = ((UInt32)rnseed[4] << 24) | ((UInt32)rnseed[5] << 16) | ((UInt32)rnseed[6] << 8) | ((UInt32)rnseed[7]);
+	public void reseed(float newseed)
+	{
+		mt = new UInt32[N];
+		mti = N + 1;
+		mag01 = new UInt32[] { 0, (UInt32)0x9908b0df };
+
+		List<float> seed = new List<float>() { };
+
+		if (newseed == -9999.0f)
+		{
+			seed.Add(System.DateTime.Now.Millisecond);
+			seed.Add(System.DateTime.Now.Second);
+			seed.Add(System.DateTime.Now.DayOfYear);
+			seed.Add(System.DateTime.Now.Year);
+		}
+		else
+		{
+			seed.Add(newseed);
+		}
 
 
-		UInt32 i, j;
-		Int32 k;
-		Int32 key_length = seed_key.Length;
 
 		mt[0] = 19650218;
 
@@ -38,21 +48,28 @@ public class MersenneTwister : MonoBehaviour
 			mt[mti] = ((UInt32)1812433253 * (mt[mti - 1] ^ (mt[mti - 1] >> 30)) + mti);
 		}
 
-		i = 1; j = 0;
-		k = (N > key_length ? N : key_length);
+		int i = 1;
+		int j = 0;
 
-		for (; k > 0; k--)
+		for (int k = N; k > 0; k--)
 		{
-			mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * (UInt32)1664525))
-				+ seed_key[j] + (UInt32)j; /* non linear */
-			i++; j++;
-			if (i >= N) { mt[0] = mt[N - 1]; i = 1; }
-			if (j >= key_length) j = 0;
+			mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * (UInt32)1664525)) + (UInt32)seed[j] + (UInt32)j; /* non linear */
+			i++;
+			j++;
+			if (i >= N)
+			{
+				mt[0] = mt[N - 1];
+				i = 1;
+			}
+			if (j >= seed.Count)
+			{
+				j = 0;
+			}
 		}
-		for (k = N - 1; k > 0; k--)
+
+		for (int k = N - 1; k > 0; k--)
 		{
-			mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * (UInt32)1566083941))
-				- (UInt32)i; /* non linear */
+			mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * (UInt32)1566083941)) - (UInt32)i; /* non linear */
 			i++;
 			if (i >= N)
 			{
@@ -60,7 +77,7 @@ public class MersenneTwister : MonoBehaviour
 				i = 1;
 			}
 		}
-		mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */
+		mt[0] = 2147483648;
 	}
 
 	public UInt32 genrand_Int32()
@@ -69,7 +86,7 @@ public class MersenneTwister : MonoBehaviour
 
 		if (mti >= N)
 		{ /* generate N words at one time */
-			Int16 kk;
+			int kk;
 
 			for (kk = 0; kk < N - M; kk++)
 			{
@@ -95,7 +112,7 @@ public class MersenneTwister : MonoBehaviour
 		y ^= (y << 15) & 0xefc60000;
 		y ^= (y >> 18);
 
-		return y;
+		return (y);
 	}
 
 	public double genrand_real1()       /* divided by 2^32-1 */
