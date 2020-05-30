@@ -21,14 +21,23 @@ public class RandomRangeTest : MonoBehaviour
     public enum method
     {
         LCG,
-        URANIUM,
         MOUSE,
         MOUSEANDTIME,
         MERSENNETWISTER,
         MERSENNETWISTERANDURANIUM,
+        URANIUMLCG,
     }
 
     public method chosen;
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ScreenCapture.CaptureScreenshot("Doc/"+ chosen.ToString() + ".png");
+            Debug.Log("Saved Screenshot");
+        }
+    }
 
     #region init
     void Start()
@@ -40,7 +49,7 @@ public class RandomRangeTest : MonoBehaviour
                     LCG();
                     break;
                 }
-            case method.URANIUM:
+            case method.URANIUMLCG:
                 {
                     uranium();
                     break;

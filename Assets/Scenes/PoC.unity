@@ -136,7 +136,7 @@ PrefabInstance:
     - target: {fileID: 4253008223062742102, guid: bf7b7221858ba4a488d9dfc71e7e87f9,
         type: 3}
       propertyPath: timeBeforeDecay
-      value: 0.24
+      value: 0.024
       objectReference: {fileID: 0}
     - target: {fileID: 4253008223062742103, guid: bf7b7221858ba4a488d9dfc71e7e87f9,
         type: 3}
@@ -603,7 +603,7 @@ MonoBehaviour:
   spawns: []
   count: 0
   timetaken: 0
-  chosen: 5
+  chosen: 0
 --- !u!114 &401813890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,6 +623,7 @@ MonoBehaviour:
   circleSize: 90
   center: 0
   targetoffset: {x: 0, y: 0, z: 0}
+  screenshotMode: 1
 --- !u!114 &401813891
 MonoBehaviour:
   m_ObjectHideFlags: 0
