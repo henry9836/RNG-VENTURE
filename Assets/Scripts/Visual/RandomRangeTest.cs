@@ -301,9 +301,13 @@ public class RandomRangeTest : MonoBehaviour
     public IEnumerator LCGtimer()
     {
         double seed = 1234;
-        double a = 22695477;
+        //double a = 22695477;
+        //double c = 1;
+        //double m = 100000;
+
+        double a = 65539;
         double c = 1;
-        double m = 100000;
+        double m = 2147483648;
 
         double v1 = 0.0;
         double v2 = 0.0;
