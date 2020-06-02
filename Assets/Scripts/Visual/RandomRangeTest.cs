@@ -147,8 +147,8 @@ public class RandomRangeTest : MonoBehaviour
                 {
                     tmp = nfmod(tmp, 10.0f);
                     tmp /= 10.0f;
-                    tmp *= rangeToSpawn * 2.0f;
-                    tmp -= rangeToSpawn;
+                    tmp *= rangeToSpawn;
+                    tmp -= rangeToSpawn / 2.0f;
                     thecount++;
                     Number(tmp);
                 }
@@ -191,8 +191,8 @@ public class RandomRangeTest : MonoBehaviour
                     tmp *= System.DateTime.Now.Millisecond;
                     tmp = nfmod(tmp, 10.0f);
                     tmp /= 10.0f;
-                    tmp *= rangeToSpawn * 2.0f;
-                    tmp -= rangeToSpawn;
+                    tmp *= rangeToSpawn;
+                    tmp -= rangeToSpawn / 2.0f;
                     thecount++;
                     Number(tmp);
                 }

@@ -603,7 +603,7 @@ MonoBehaviour:
   spawns: []
   count: 0
   timetaken: 0
-  chosen: 1
+  chosen: 5
 --- !u!114 &401813890
 MonoBehaviour:
   m_ObjectHideFlags: 0
