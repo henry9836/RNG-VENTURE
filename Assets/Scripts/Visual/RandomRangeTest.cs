@@ -146,9 +146,9 @@ public class RandomRangeTest : MonoBehaviour
                 if (tmp > 10.0f || tmp < -10.0f)
                 {
                     tmp = nfmod(tmp, 10.0f);
-                    tmp /= 5.0f;
-                    tmp *= rangeToSpawn;
-                    tmp -= rangeToSpawn / 2;
+                    tmp /= 10.0f;
+                    tmp *= rangeToSpawn * 2.0f;
+                    tmp -= rangeToSpawn;
                     thecount++;
                     Number(tmp);
                 }
@@ -158,7 +158,7 @@ public class RandomRangeTest : MonoBehaviour
             {
                 count++;
                 thecount = 0;
-                spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
+                spawns.Add(new Vector3(v1, v2, v3 ));
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
@@ -190,9 +190,9 @@ public class RandomRangeTest : MonoBehaviour
                 {
                     tmp *= System.DateTime.Now.Millisecond;
                     tmp = nfmod(tmp, 10.0f);
-                    tmp /= 5.0f;
-                    tmp *= rangeToSpawn;
-                    tmp -= rangeToSpawn / 2;
+                    tmp /= 10.0f;
+                    tmp *= rangeToSpawn * 2.0f;
+                    tmp -= rangeToSpawn;
                     thecount++;
                     Number(tmp);
                 }
@@ -246,20 +246,20 @@ public class RandomRangeTest : MonoBehaviour
 
                 v1 = seed / m;
                 v1 *= rangeToSpawn;
-                v1 -= rangeToSpawn/2;
+                v1 -= rangeToSpawn/2.0f;
 
                 seed = (a * seed * c) % m;
 
                 v2 = seed / m;
                 v2 *= rangeToSpawn;
-                v2 -= rangeToSpawn/2;
+                v2 -= rangeToSpawn/2.0f;
 
 
                 seed = (a * seed * c) % m;
 
                 v3 = seed / m;
                 v3 *= rangeToSpawn;
-                v3 -= rangeToSpawn/2;
+                v3 -= rangeToSpawn/2.0f;
 
                 spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
                 count++;
@@ -284,13 +284,13 @@ public class RandomRangeTest : MonoBehaviour
 
             double v1 = MT.genrand_res53();
             v1 *= rangeToSpawn;
-            v1 -= rangeToSpawn / 2;
+            v1 -= rangeToSpawn / 2.0f;
             double v2 = MT.genrand_res53();
             v2 *= rangeToSpawn;
-            v2 -= rangeToSpawn / 2;
+            v2 -= rangeToSpawn / 2.0f;
             double v3 = MT.genrand_res53();
             v3 *= rangeToSpawn;
-            v3 -= rangeToSpawn / 2;
+            v3 -= rangeToSpawn / 2.0f;
             spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
             count++;
 
@@ -317,20 +317,20 @@ public class RandomRangeTest : MonoBehaviour
 
             v1 = seed / m;
             v1 *= rangeToSpawn;
-            v1 -= rangeToSpawn / 2;
+            v1 -= rangeToSpawn / 2.0f;
 
             seed = (a * seed * c) % m;
 
             v2 = seed / m;
             v2 *= rangeToSpawn;
-            v2 -= rangeToSpawn / 2;
+            v2 -= rangeToSpawn / 2.0f;
 
 
             seed = (a * seed * c) % m;
 
             v3 = seed / m;
             v3 *= rangeToSpawn;
-            v3 -= rangeToSpawn / 2;
+            v3 -= rangeToSpawn / 2.0f;
 
             spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
             count++;
@@ -359,13 +359,13 @@ public class RandomRangeTest : MonoBehaviour
 
                 double v1 = MT.genrand_res53();
                 v1 *= rangeToSpawn;
-                v1 -= rangeToSpawn / 2;
+                v1 -= rangeToSpawn / 2.0f;
                 double v2 = MT.genrand_res53();
                 v2 *= rangeToSpawn;
-                v2 -= rangeToSpawn / 2;
+                v2 -= rangeToSpawn / 2.0f;
                 double v3 = MT.genrand_res53();
                 v3 *= rangeToSpawn;
-                v3 -= rangeToSpawn / 2;
+                v3 -= rangeToSpawn / 2.0f;
                 spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
                 count++;
             }
