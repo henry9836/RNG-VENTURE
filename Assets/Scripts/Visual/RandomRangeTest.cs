@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using UnityEngine;
 
 public class RandomRangeTest : MonoBehaviour
@@ -18,6 +18,9 @@ public class RandomRangeTest : MonoBehaviour
     public int count = 0;
     public float timetaken = 0.0f;
 
+    long nanosecondspertick;
+
+
     public enum method
     {
         LCG,
@@ -29,6 +32,10 @@ public class RandomRangeTest : MonoBehaviour
     }
 
     public method chosen;
+    private void Awake()
+    {
+        nanosecondspertick = (1000L * 1000L * 1000L) / System.Diagnostics.Stopwatch.Frequency;
+    }
 
     private void FixedUpdate()
     {
@@ -276,11 +283,12 @@ public class RandomRangeTest : MonoBehaviour
     public IEnumerator twist()
     {
         MersenneTwister MT = this.GetComponent<MersenneTwister>();
+        long ticktotal = 0;
 
 
         while (true)
         {
-            timetaken += Time.deltaTime;
+            var tmptimer = System.Diagnostics.Stopwatch.StartNew();
 
             double v1 = MT.genrand_res53();
             v1 *= rangeToSpawn;
@@ -294,6 +302,14 @@ public class RandomRangeTest : MonoBehaviour
             spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
             count++;
 
+            tmptimer.Stop();
+            if (count > 10 && count < 5000)
+            {
+                ticktotal += tmptimer.ElapsedTicks;
+                Debug.Log((ticktotal * nanosecondspertick) / count);
+            }
+            tmptimer.Reset();
+
             yield return null;
         }
     }
@@ -301,9 +317,8 @@ public class RandomRangeTest : MonoBehaviour
     public IEnumerator LCGtimer()
     {
         double seed = 1234;
-        //double a = 22695477;
-        //double c = 1;
-        //double m = 100000;
+        long ticktotal = 0;
+
 
         double a = 65539;
         double c = 1;
@@ -315,7 +330,8 @@ public class RandomRangeTest : MonoBehaviour
 
         while (true)
         {
-            timetaken += Time.deltaTime;
+            var tmptimer = System.Diagnostics.Stopwatch.StartNew();
+
 
             seed = (a * seed * c) % m;
 
@@ -339,6 +355,16 @@ public class RandomRangeTest : MonoBehaviour
             spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
             count++;
 
+            tmptimer.Stop();
+            if (count > 10 && count < 5000)
+            {
+                ticktotal += tmptimer.ElapsedTicks;
+
+               // long avgnanno = (ticktotal * nanosecondspertick) / count;
+                Debug.Log((ticktotal * nanosecondspertick) / count);
+            }
+            tmptimer.Reset();
+
             yield return null;
         }
     }
@@ -347,16 +373,20 @@ public class RandomRangeTest : MonoBehaviour
     {
         float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
         float timer = 0.0f;
+        long ticktotal = 0;
+
         MersenneTwister MT = this.GetComponent<MersenneTwister>();
 
 
         while (true)
         {
-            timetaken += Time.deltaTime;
             timer += Time.deltaTime;
 
             if ((timer >= timeToRando) && (uraniumSim.readUranium() != 1))
             {
+
+                var tmptimer = System.Diagnostics.Stopwatch.StartNew();
+
                 float seed = (float)uraniumSim.readUranium() * (float)System.DateTime.Now.Millisecond;
                 MT.reseed(Mathf.Abs(seed));
                 timer = 0.0f;
@@ -372,6 +402,14 @@ public class RandomRangeTest : MonoBehaviour
                 v3 -= rangeToSpawn / 2.0f;
                 spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
                 count++;
+
+                tmptimer.Stop();
+                if (count > 10 && count < 5000)
+                {
+                    ticktotal += tmptimer.ElapsedTicks;
+                    Debug.Log((ticktotal * nanosecondspertick) / count);
+                }
+                tmptimer.Reset();
             }
 
             yield return null;
