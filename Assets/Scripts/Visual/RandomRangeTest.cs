@@ -224,6 +224,7 @@ public class RandomRangeTest : MonoBehaviour
     {
         float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
         float timer = 0.0f;
+        double seed = 0.0;
 
         while (true)
         {
@@ -233,12 +234,7 @@ public class RandomRangeTest : MonoBehaviour
             if (timer >= timeToRando && uraniumSim.readUranium() != 1)
             {
                 //Get Uranium Value With Other Values
-                double seed = uraniumSim.readUranium() * System.DateTime.Now.Millisecond;
-
-                if (seed < 0.0)
-                {
-                    seed *= -1.0;
-                }
+                seed = uraniumSim.readUranium() * System.DateTime.Now.Millisecond;
 
                 //LCG
                 double a = 22695477;
@@ -373,6 +369,7 @@ public class RandomRangeTest : MonoBehaviour
     {
         float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
         float timer = 0.0f;
+        float seed = 0.0f;
         long ticktotal = 0;
 
         MersenneTwister MT = this.GetComponent<MersenneTwister>();
@@ -385,11 +382,11 @@ public class RandomRangeTest : MonoBehaviour
             if ((timer >= timeToRando) && (uraniumSim.readUranium() != 1))
             {
 
-                var tmptimer = System.Diagnostics.Stopwatch.StartNew();
-
-                float seed = (float)uraniumSim.readUranium() * (float)System.DateTime.Now.Millisecond;
-                MT.reseed(Mathf.Abs(seed));
+                seed = uraniumSim.readUranium() * System.DateTime.Now.Millisecond;
+                MT.reseed(seed);
                 timer = 0.0f;
+
+                var tmptimer = System.Diagnostics.Stopwatch.StartNew();
 
                 double v1 = MT.genrand_res53();
                 v1 *= rangeToSpawn;
