@@ -203,7 +203,7 @@ public class RandomRangeTest : MonoBehaviour
             {
                 count++;
                 thecount = 0; 
-                spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
+                spawns.Add(new Vector3(v1, v2, v3));
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
