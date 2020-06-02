@@ -34,7 +34,7 @@ public class UraniumSimulator : MonoBehaviour
             int coin = UnityEngine.Random.Range(0, 10);
             if (coin == 6)
             {
-                Debug.Log("Decay Event");
+                //Debug.Log("Decay Event");
                 seedingString += Convert.ToInt32(decayFlag);
 
                 //Check if our string is the binary length

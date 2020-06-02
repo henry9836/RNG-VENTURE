@@ -125,7 +125,8 @@ public class MersenneTwister : MonoBehaviour
 	}
 	public double genrand_res53()       //with 53 - bit resolution
 	{
-		UInt32 a = genrand_Int32() >> 5, b = genrand_Int32() >> 6;
+		UInt32 a = genrand_Int32() >> 5;
+		UInt32 b = genrand_Int32() >> 6;
 		return ((double)a * 67108864.0 + b) * ((double)1.0 / 9007199254740992.0);
 	}
 }

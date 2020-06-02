@@ -129,51 +129,35 @@ public class RandomRangeTest : MonoBehaviour
 
     public IEnumerator mousewig()
     {
-        int count = 0;
+        int thecount = 0;
 
         while (true)
         {
+            timetaken += Time.deltaTime;
+
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
             float tmp = 0.0f;
 
-            if (x != 0.0f && y != 0.0f)
+            if (x != 0.0f || y != 0.0f)
             {
                 tmp = x + y;
-                if (tmp > 10.0f)
-                {
-                    tmp = nfmod(tmp, 10.0f);
-                    count++;
-                    Number(tmp);
-                }
 
-            }
-            else if (x != 0.0f)
-            {
-                tmp = x;
-                if (tmp > 10.0f)
+                if (tmp > 10.0f || tmp < -10.0f)
                 {
                     tmp = nfmod(tmp, 10.0f);
-                    count++;
-                    Number(tmp);
-                }
-
-            }
-            else if (y != 0.0f)
-            {
-                tmp = y;
-                if (tmp > 10.0f)
-                {
-                    tmp = nfmod(tmp, 10.0f);
-                    count++;
+                    tmp /= 5.0f;
+                    tmp *= rangeToSpawn;
+                    tmp -= rangeToSpawn / 2;
+                    thecount++;
                     Number(tmp);
                 }
             }
 
-
-            if (count == 3)
+            if (thecount == 3)
             {
-                count = 0;
+                count++;
+                thecount = 0;
                 spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
                 v1 = 0.0f;
                 v2 = 0.0f;
@@ -188,54 +172,37 @@ public class RandomRangeTest : MonoBehaviour
 
     public IEnumerator mousewigTime()
     {
-        int count = 0;
+        int thecount = 0;
 
         while (true)
         {
+            timetaken += Time.deltaTime;
+
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
             float tmp = 0.0f;
 
-            if (x != 0.0f && y != 0.0f)
+            if (x != 0.0f || y != 0.0f)
             {
                 tmp = x + y;
-                if (tmp > 10.0f)
-                {
-                    tmp *= System.DateTime.Now.Millisecond;
-                    tmp = nfmod(tmp, 10.0f);
-                    count++;
-                    Number(tmp);
-                }
 
-            }
-            else if (x != 0.0f)
-            {
-                tmp = x;
-                if (tmp > 10.0f)
+                if (tmp > 10.0f || tmp < -10.0f)
                 {
                     tmp *= System.DateTime.Now.Millisecond;
                     tmp = nfmod(tmp, 10.0f);
-                    count++;
-                    Number(tmp);
-                }
-
-            }
-            else if (y != 0.0f)
-            {
-                tmp = y;
-                if (tmp > 10.0f)
-                {
-                    tmp *= System.DateTime.Now.Millisecond;
-                    tmp = nfmod(tmp, 10.0f);
-                    count++;
+                    tmp /= 5.0f;
+                    tmp *= rangeToSpawn;
+                    tmp -= rangeToSpawn / 2;
+                    thecount++;
                     Number(tmp);
                 }
             }
 
 
-            if (count == 3)
+            if (thecount == 3)
             {
-                count = 0; 
+                count++;
+                thecount = 0; 
                 spawns.Add(new Vector3(Mathf.Abs(v1), Mathf.Abs(v2), Mathf.Abs(v3)));
                 v1 = 0.0f;
                 v2 = 0.0f;
