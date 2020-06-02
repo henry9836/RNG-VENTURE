@@ -16,7 +16,6 @@ public class RandomRangeTest : MonoBehaviour
     private float v3 = 0.0f;
 
     public int count = 0;
-    public float timetaken = 0.0f;
 
     long nanosecondspertick;
 
@@ -137,10 +136,11 @@ public class RandomRangeTest : MonoBehaviour
     public IEnumerator mousewig()
     {
         int thecount = 0;
+        System.Diagnostics.Stopwatch tmptimer = new System.Diagnostics.Stopwatch();
+        long ticktotal = 0;
 
         while (true)
         {
-            timetaken += Time.deltaTime;
 
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
@@ -148,6 +148,14 @@ public class RandomRangeTest : MonoBehaviour
 
             if (x != 0.0f || y != 0.0f)
             {
+                if (thecount == 0)
+                {
+                    tmptimer = System.Diagnostics.Stopwatch.StartNew();
+                }
+                else
+                {
+                    tmptimer.Start();
+                }
                 tmp = x + y;
 
                 if (tmp > 10.0f || tmp < -10.0f)
@@ -159,6 +167,8 @@ public class RandomRangeTest : MonoBehaviour
                     thecount++;
                     Number(tmp);
                 }
+                tmptimer.Stop();
+
             }
 
             if (thecount == 3)
@@ -169,6 +179,13 @@ public class RandomRangeTest : MonoBehaviour
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
+
+                if (count > 10 && count < 5000)
+                {
+                    ticktotal += tmptimer.ElapsedTicks;
+                    Debug.Log((ticktotal * nanosecondspertick) / count);
+                }
+                tmptimer.Reset();
             }
 
 
@@ -180,10 +197,12 @@ public class RandomRangeTest : MonoBehaviour
     public IEnumerator mousewigTime()
     {
         int thecount = 0;
+        System.Diagnostics.Stopwatch tmptimer = new System.Diagnostics.Stopwatch();
+        long ticktotal = 0;
+
 
         while (true)
         {
-            timetaken += Time.deltaTime;
 
             float x = Input.GetAxis("Mouse X");
             float y = Input.GetAxis("Mouse Y");
@@ -191,6 +210,15 @@ public class RandomRangeTest : MonoBehaviour
 
             if (x != 0.0f || y != 0.0f)
             {
+                if (thecount == 0)
+                {
+                    tmptimer = System.Diagnostics.Stopwatch.StartNew();
+                }
+                else
+                {
+                    tmptimer.Start();
+                }
+
                 tmp = x + y;
 
                 if (tmp > 10.0f || tmp < -10.0f)
@@ -203,6 +231,9 @@ public class RandomRangeTest : MonoBehaviour
                     thecount++;
                     Number(tmp);
                 }
+
+                tmptimer.Stop();
+
             }
 
 
@@ -214,6 +245,13 @@ public class RandomRangeTest : MonoBehaviour
                 v1 = 0.0f;
                 v2 = 0.0f;
                 v3 = 0.0f;
+
+                if (count > 10 && count < 5000)
+                {
+                    ticktotal += tmptimer.ElapsedTicks;
+                    Debug.Log((ticktotal * nanosecondspertick) / count);
+                }
+                tmptimer.Reset();
             }
 
             yield return null;
@@ -224,49 +262,66 @@ public class RandomRangeTest : MonoBehaviour
     {
         float timeToRando = uraniumSim.timeBeforeDecay / 3.0f;
         float timer = 0.0f;
-        double seed = 0.0;
+        double seed = 1234;
+
+
+        long ticktotal = 0;
+
+
+        double a = 65539;
+        double c = 0;
+        double m = 2147483648;
+
+        double v1 = 0.0;
+        double v2 = 0.0;
+        double v3 = 0.0;
+
+
 
         while (true)
         {
-            timetaken += Time.deltaTime;
             timer += Time.deltaTime;
 
             if (timer >= timeToRando && uraniumSim.readUranium() != 1)
             {
-                //Get Uranium Value With Other Values
-                seed = uraniumSim.readUranium() * System.DateTime.Now.Millisecond;
+                c = Mathf.Abs(uraniumSim.readUranium() * System.DateTime.Now.Millisecond);
 
-                //LCG
-                double a = 22695477;
-                double c = 1;
-                double m = 100000;
+                var tmptimer = System.Diagnostics.Stopwatch.StartNew();
 
-                double v1 = 0.0;
-                double v2 = 0.0;
-                double v3 = 0.0;
 
-                seed = (a * seed * c) % m;
+                v1 = 0.0;
+                v2 = 0.0;
+                v3 = 0.0;
+
+                seed = (a * seed + c) % m;
 
                 v1 = seed / m;
                 v1 *= rangeToSpawn;
-                v1 -= rangeToSpawn/2.0f;
+                v1 -= rangeToSpawn / 2.0f;
 
-                seed = (a * seed * c) % m;
+                seed = (a * seed + c) % m;
 
                 v2 = seed / m;
                 v2 *= rangeToSpawn;
-                v2 -= rangeToSpawn/2.0f;
+                v2 -= rangeToSpawn / 2.0f;
 
 
-                seed = (a * seed * c) % m;
+                seed = (a * seed + c) % m;
 
                 v3 = seed / m;
                 v3 *= rangeToSpawn;
-                v3 -= rangeToSpawn/2.0f;
+                v3 -= rangeToSpawn / 2.0f;
 
                 spawns.Add(new Vector3((float)v1, (float)v2, (float)v3));
                 count++;
 
+                tmptimer.Stop();
+                if (count > 10 && count < 5000)
+                {
+                    ticktotal += tmptimer.ElapsedTicks;
+                    Debug.Log((ticktotal * nanosecondspertick) / count);
+                }
+                tmptimer.Reset();
 
                 timer = 0.0f;
             }
@@ -315,9 +370,8 @@ public class RandomRangeTest : MonoBehaviour
         double seed = 1234;
         long ticktotal = 0;
 
-
         double a = 65539;
-        double c = 1;
+        double c = 0;
         double m = 2147483648;
 
         double v1 = 0.0;
@@ -329,20 +383,20 @@ public class RandomRangeTest : MonoBehaviour
             var tmptimer = System.Diagnostics.Stopwatch.StartNew();
 
 
-            seed = (a * seed * c) % m;
+            seed = (a * seed + c) % m;
 
             v1 = seed / m;
             v1 *= rangeToSpawn;
             v1 -= rangeToSpawn / 2.0f;
 
-            seed = (a * seed * c) % m;
+            seed = (a * seed + c) % m;
 
             v2 = seed / m;
             v2 *= rangeToSpawn;
             v2 -= rangeToSpawn / 2.0f;
 
 
-            seed = (a * seed * c) % m;
+            seed = (a * seed + c) % m;
 
             v3 = seed / m;
             v3 *= rangeToSpawn;
@@ -355,8 +409,6 @@ public class RandomRangeTest : MonoBehaviour
             if (count > 10 && count < 5000)
             {
                 ticktotal += tmptimer.ElapsedTicks;
-
-               // long avgnanno = (ticktotal * nanosecondspertick) / count;
                 Debug.Log((ticktotal * nanosecondspertick) / count);
             }
             tmptimer.Reset();
